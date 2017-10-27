@@ -28,21 +28,33 @@
 
 ```cpp
 if(f[mid] > f[mmid])
-    R = mmid
+    R = mmid;
 if(f[mid] <= f[mmid])
-    L = mid                //函数是凸函数，也就是求极大值
+    L = mid;                //函数是凸函数，也就是求极大值
 ```
 
 怎么求极小值呢？
 
 ```cpp
 if(f[mid] <= f[mmid])   
-     R = mmid
+     R = mmid;
 if(f[mid] > f[mmid])
-    L = mid                //函数是凹函数，也就是求极小值
+    L = mid;                //函数是凹函数，也就是求极小值
 ```
+
+例题1：[HihoCoder 1142](https://hihocoder.com/problemset/problem/1142)
+
+真·三分裸题
+
+$$f(x) = ax ^ 2 + bx + c$$
+
+利用三分就可以直接做了。
 
 例题2：[CodeForces 578C](http://codeforces.com/problemset/problem/578/C)
 
-就是
+给定一个序列$$A$$，一个区间的$$poorness$$定义为这个区间内和的绝对值 ，$$weakness$$等于所有区间最大的$$poorness$$
+
+求一个$$x$$使得，序列$$A$$全部减$$x$$后$$weakness$$最小
+
+
 
