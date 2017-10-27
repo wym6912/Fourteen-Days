@@ -42,7 +42,7 @@ if(f[mid] > f[mmid])
     L = mid                //函数是凹函数，也就是求极小值
 ```
 
-例题1：[CodeForces 578C](http://codeforces.com/problemset/problem/578/C)
+例题2：[CodeForces 578C](http://codeforces.com/problemset/problem/578/C)
 
 就是
 
