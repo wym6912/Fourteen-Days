@@ -76,3 +76,13 @@ $$f(x, i) = \sum_{x - i <= k <= x + i, n - x + 1 <= k <= n}{(data[k])} - data[x]
 
 这道题需要注意的问题是：需要限制枚举个数\(Time Limit Exceed On Test 7\), 用 double 枚举会错\(Wrong Answer On Test 12\), 最好用前缀和计算上式中的 sigma 的值\(可能也会 T 吧\)
 
+（反正不会告诉你我错了 14 遍）
+
+#### 3.点分治
+
+
+
+#### 4.树分治
+
+
+
