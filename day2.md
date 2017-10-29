@@ -70,11 +70,11 @@ $$f(x, i) = \sum_{x - i <= k <= x + i, n - x + 1 <= k <= n}{(data[k])} - data[x]
 
 这个函数的性质有哪些？
 
-![](/PIC_Day2_3.jpg)性质1：一定选择奇数个数。若选择偶数个数则可将中间两个数较大的一 个删除使得答案更优
+![](/PIC_Day2_3.jpg)性质1：一定选择奇数个数。若选择偶数个数则可将中间两个数较大的一个删除使得答案更优
 
 性质2：枚举中位数，按照这样的方法枚举可以得到唯一结果
 
-这道题需要注意的问题是：需要限制枚举个数\(Time Limit Exceed On Test 7\), 用 double 枚举会错\(Wrong Answer On Test 12\), 最好用前缀和计算上式中的 sigma 的值\(可能也会 T 吧\)
+这道题需要注意的问题是：需要限制枚举个数\(Time Limit Exceeded On Test 7\), 用 double 枚举会错\(Wrong Answer On Test 12\), 最好用前缀和计算上式中的 sigma 的值\(可能也会 T 吧\)
 
 （反正不会告诉你我错了 14 遍）
 
