@@ -1,7 +1,7 @@
 # Summary
 
 * [Introduction](README.md)
-* [第 1 天](di-1-tian.md)
+* 第 1 天
 * [第 2 天](/day2.md)
 * 第 3 天
 * 第 4 天
@@ -16,4 +16,6 @@
 * 第 13 天
 * 第 14 天
 * 后来的故事
+
+
 
