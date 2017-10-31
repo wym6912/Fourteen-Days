@@ -18,6 +18,10 @@
 
 [练习题1](https://vjudge.net/contest/194743)
 
+xjb整理的...C 和 D 都需要用主席树， gg
+
+A 题是一道可以抽象成函数$$f(x) = num(\exists i, j, |data_i - data_j| = x)$$，$$num()$$表示满足条件的对数我需要什么值呢？一共有$$\begin {pmatrix} n \\ 2 \end {pmatrix}$$对，然而根据题的性质，我们只需比较$$\frac{\begin {pmatrix} n \\ 2 \end {pmatrix}}{2}$$与$$f(x)$$的关系。
+
 #### 2.三分
 
 三分的原理其实和二分一样，我们需要去找什么呢？这次是要找函数的**极值**了。
