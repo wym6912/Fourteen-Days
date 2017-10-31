@@ -20,9 +20,11 @@
 
 xjb整理的...C 和 D 都需要用主席树， gg
 
-A 题是一道可以抽象成函数$$f(x) = num(\exists i, j, |data_i - data_j| = x)$$，$$num()$$表示满足条件的对数我需要什么值呢？一共有$$\begin {pmatrix} n \\ 2 \end {pmatrix}$$对，然而根据题的性质，我们只需比较$$\frac{\begin {pmatrix} n \\ 2 \end {pmatrix}}{2}$$与$$f(x)$$的关系。
+A 题是一道可以抽象成函数$$f(x) = num(\exists i, j, |data_i - data_j| = x)$$，$$num()$$表示满足条件的对数。我需要什么值呢？一共有$$\begin {pmatrix} n \\ 2 \end {pmatrix}$$对，然而根据题的性质，我们只需比较$$\frac{\begin {pmatrix} n \\ 2 \end {pmatrix}}{2}$$与$$f(x)$$的关系。
 
 B 题也是一样的，可以抽象一个函数$$f(x) = \sum \frac{r[i] ^  2} {x}$$，这道题的问题在于精度问题，4位小数，还有注意$$\pi$$和$$eps$$的取值，$$\pi$$必须在外面乘（感觉是因为$$\pi$$的精度不够），$$eps$$应该取$$1e-6$$
+
+C D 两道题使用前面的方法是不行的，复杂度是$$O(qn log n)$$，肯定过不了的（感谢 jlx 指出）
 
 #### 2.三分
 
@@ -86,7 +88,40 @@ $$f(x, i) = \sum_{x - i <= k <= x + i, n - x + 1 <= k <= n}{(data[k])} - data[x]
 
 #### 3.归并排序
 
-为什么要把归并排序放到这里来说呢？因为归并排序每次把待排序区间一分为二，将两个子区间排序，然后将两个已经排好序的序列合并，符合二分的性质。
+为什么要把归并排序放到这里来说呢？因为归并排序每次把待排序区间一分为二，将两个子区间排序，然后将两个已经排好序的序列合并，符合二分的性质。它的复杂度稳定的$$O(n log n)$$
+
+归并排序的代码如下：
+
+```cpp
+long long __merge__(int l, int mid, int r)  // return 的值表示[l, r]逆序对的个数
+{
+	ll ans = 0; 
+	int p1 = l, p2 = mid + 1;
+	for(int i = l;i <= r;i ++)
+	{
+		if(p1 <= mid && (p2 > r || data[p1] <= data[p2]))
+			tmp[i] = data[p1], p1 ++;
+		else tmp[i] = data[p2], p2 ++, ans += (mid - p1 + 1);
+	}
+	for(int i = l;i <= r;i ++)data[i] = tmp[i];
+	return ans;
+}
+
+long long erfen(int l, int r) // return 的值表示[a, b]逆序对的个数
+{
+	long long ans = 0;
+	int mid = (l + r) >> 1;
+	if(l < r)
+	{
+		ans += erfen(l, mid);
+		ans += erfen(mid + 1, r);
+	}
+	ans += __merge__(l, mid, r);
+	return ans;
+}
+```
+
+模板题：[HihoCoder 1141](https://hihocoder.com/problemset/problem/1141)
 
 #### 4.点分治
 
@@ -98,7 +133,7 @@ emmm...不太会（毛老师窝对不起你）
 
 #### 6.cdq 分治
 
-这是一
+这是一个比较高级的数据结构（emm...还没看...）
 
 今天的分治旅程就到这里。我们明天见！
 
