@@ -2,7 +2,7 @@
 
 * [Introduction](README.md)
 * 第 1 天
-* [第 2 天](/day2.md)
+* [第 2 天](/day2.md) 分治
 * 第 3 天
 * 第 4 天
 * 第 5 天
