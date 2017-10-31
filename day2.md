@@ -6,7 +6,21 @@
 
 [入门班第 3 天练习题](https://vjudge.net/contest/176369)
 
-今天讲的是分治。下面就是正题了。
+今天讲的是分治。
+
+#### 0.分治概论
+
+分而治之，将原问题不断划分为若干个子问题，直到子问题规模足够小可以**直接**解决
+
+子问题间互相独立且与原问题**形式相同**，递归求解这些子问题，然后将各子问题的解合并得到原问题的解。
+
+分治三步：
+
+1. 划分
+2. 解决
+3. 合并
+
+下面就是正题了。
 
 #### 1.二分
 
@@ -95,33 +109,35 @@ $$f(x, i) = \sum_{x - i <= k <= x + i, n - x + 1 <= k <= n}{(data[k])} - data[x]
 ```cpp
 long long __merge__(int l, int mid, int r)  // return 的值表示[l, r]逆序对的个数
 {
-	ll ans = 0; 
-	int p1 = l, p2 = mid + 1;
-	for(int i = l;i <= r;i ++)
-	{
-		if(p1 <= mid && (p2 > r || data[p1] <= data[p2]))
-			tmp[i] = data[p1], p1 ++;
-		else tmp[i] = data[p2], p2 ++, ans += (mid - p1 + 1);
-	}
-	for(int i = l;i <= r;i ++)data[i] = tmp[i];
-	return ans;
+    ll ans = 0; 
+    int p1 = l, p2 = mid + 1;
+    for(int i = l;i <= r;i ++)
+    {
+        if(p1 <= mid && (p2 > r || data[p1] <= data[p2]))
+            tmp[i] = data[p1], p1 ++;
+        else tmp[i] = data[p2], p2 ++, ans += (mid - p1 + 1);
+    }
+    for(int i = l;i <= r;i ++)data[i] = tmp[i];
+    return ans;
 }
 
 long long erfen(int l, int r) // return 的值表示[a, b]逆序对的个数
 {
-	long long ans = 0;
-	int mid = (l + r) >> 1;
-	if(l < r)
-	{
-		ans += erfen(l, mid);
-		ans += erfen(mid + 1, r);
-	}
-	ans += __merge__(l, mid, r);
-	return ans;
+    long long ans = 0;
+    int mid = (l + r) >> 1;
+    if(l < r)
+    {
+        ans += erfen(l, mid);
+        ans += erfen(mid + 1, r);
+    }
+    ans += __merge__(l, mid, r);
+    return ans;
 }
 ```
 
 模板题：[HihoCoder 1141](https://hihocoder.com/problemset/problem/1141)
+
+简单变形题：[HDU 4911](http://acm.hdu.edu.cn/showproblem.php?pid=4911)
 
 #### 4.点分治
 
