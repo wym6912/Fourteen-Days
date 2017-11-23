@@ -101,7 +101,7 @@ int DFS(int k) 　
 
 然后。。。可行性剪枝来了！如果这个人已经有敌人了，我就不加这个点，这样一定不会加错！（如果加了是错的，还不如在一开始就不加，你说对吧？）这样是不能过的。但是如何更好地优化？
 
-下来。。。最优化剪枝！直接 x + n - p &lt;= maxp，这样就可以了。（[Submission](http://ppoj.ac.cn/submission/961)）
+下来。。。最优化剪枝！直接 x + n - p &lt;= maxp，这样就可以了。（[Submission](http://ppoj.ac.cn/submission/961)）
 
 但是可行性剪枝有更好的方法。
 
