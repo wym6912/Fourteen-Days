@@ -119,7 +119,7 @@ int DFS(int k) 　
 
 例题2：[POJ 1011](http://poj.org/problem?id=1011) ，（感谢雨姐姐2333），如果第$$i$$个棍子不能拼成假设的长度，则和第$$i$$个棍子相同长度的棍子也是不可能的，所以可以直接跳过去的！将所有题目给的棍子的长度按照从大到小的顺序排列，然后按照此顺序进行深搜。
 
-练习：数独问题 [POJ 2676 ](http://poj.org/problem?id=2676), [POJ 3074](http://poj.org/problem?id=3074)
+练习：数独问题 [POJ 2676 ](http://poj.org/problem?id=2676), [~~POJ 3074~~](http://poj.org/problem?id=3074)（Dancing Links）
 
 #### 2.广度优先搜索（Breadth First Search，简称 BFS）
 
@@ -134,7 +134,7 @@ BFS()
     初始化队列
     while(队列不为空且未找到目标节点)
     {
-            取队首节点扩展，并将扩展出的节点放入队尾；
+        取队首节点扩展，并将扩展出的节点放入队尾；
         必要时要记住每个节点的父节点；
     }
 }
@@ -167,7 +167,7 @@ BFS()
 struct Node
 {
     int x, y;
-    Status s;
+    Status s1, s2, ...;
 };
 ```
 
@@ -176,10 +176,56 @@ struct Node
 需要一个
 
 ```cpp
-bool Stat[maxn][maxm][State_Number];
+bool Stat[maxn][maxm][State1_Number][State2_Number]...;
 ```
 
 进行状态判重。有几种状态就加几维。
+
+例题：[HDU 4845](http://acm.hdu.edu.cn/showproblem.php?pid=4845)，是网络流 24 题中的一道很经典的题。
+
+将所有钥匙存成一个`int`型的整数，利用位运算将每把钥匙取出。核心代码如下：
+
+```cpp
+int bfs(int fx, int fy)
+{
+	point temp, init;
+	queue <point> qqq;
+	init.x = fx;
+	init.y = fy;
+	init.keys = keys[fx][fy];
+	init.step = 0;
+	qqq.push(init);
+	while(! qqq.empty())
+	{
+		init = qqq.front();
+		if(init.x == n && init.y == m)return init.step;
+		for(int i = 0; i <= 3; i ++)
+		{
+			if(init.x + dx[i] > 0 && init.x + dx[i] <= n 
+			&& init.y + dy[i] > 0 && init.y + dy[i] <= m)
+			{
+				temp.x = init.x + dx[i];
+				temp.y = init.y + dy[i];
+				temp.keys = init.keys | keys[temp.x][temp.y];
+				temp.step = init.step + 1;
+				if(walls[init.x][init.y][temp.x][temp.y] == -1)
+					continue;
+				if(walls[init.x][init.y][temp.x][temp.y] == 0 //这里可以直接通过的！！ 
+				||(temp.keys >> walls[init.x][init.y][temp.x][temp.y]) & 1)
+					if(! stat[temp.x][temp.y][temp.keys]) //必须优化掉这里，会爆空间的（重复走这个状态） 
+					{
+						qqq.push(temp);
+						stat[temp.x][temp.y][temp.keys] = true;
+					}
+			}
+		}
+		qqq.pop();
+	}
+	return -1;
+}
+```
+
+习题：[PPOJ 3](http://ppoj.ac.cn/problem/3)，（答案：[Submission](http://ppoj.ac.cn/submission/992)）；[HDU 4741](http://acm.hdu.edu.cn/showproblem.php?pid=4771)，[HDU 5025](http://acm.hdu.edu.cn/showproblem.php?pid=5025)
 
 #### 4.双向搜索
 
