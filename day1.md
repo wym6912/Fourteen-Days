@@ -38,9 +38,48 @@ vector <int> :: iterator it = vec.begin();
 
 可以利用`auto`关键字简化为以下代码：
 
-```
+```cpp
 vector <int> vec;
 auto it = vec.begin();
+```
+
+这样做的好处是将遍历一个 STL 集合变得简便：
+
+例如以下代码：
+
+```cpp
+vector <int> vec;
+for(vector <int> :: iterator it = vec.begin(); it != vec.end(); it ++)
+{
+    *it += 2;
+    cout << *it << endl;
+}
+```
+
+可以简化成如下代码：
+
+```cpp
+vector <int> vec;
+for(auto & p: vec)
+{
+    p += 2;
+    cout << p << endl;
+}
+```
+
+### 2. 空指针值
+
+利用`nullptr`关键字，将指针和数组的`NULL`区分开来。
+
+### 3. STL 的初始化语法
+
+在 C++11  中，将 `vector`和`map`等容器的初始化简化为数组形式的初始化。
+
+例子：
+
+```cpp
+vector <string> vec{"1", "2", "3"};
+map <string, string> dict{ {"ABC", "123"}, {"BCD", "234"} };
 ```
 
 
