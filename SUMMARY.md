@@ -1,7 +1,7 @@
 # Summary
 
 * [Introduction](README.md)
-* 第 1 天
+* [第 1 天 绪论 C++11 新特性](/day1.md)
 * [第 2 天 分治](//day2.md)
 * [第 3 天 搜索](//day3.md)
 * 第 4 天
