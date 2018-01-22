@@ -82,5 +82,9 @@ vector <string> vec{"1", "2", "3"};
 map <string, string> dict{ {"ABC", "123"}, {"BCD", "234"} };
 ```
 
+### 4. Hash 容器
 
+利用以下容器可以减少时间复杂度的常数。它们都是利用 Hash 算法实现的。
+
+`unordered_map`, `unordered_set`, `unordered_multimap`, `unordered_multiset`
 
