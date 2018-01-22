@@ -88,3 +88,5 @@ map <string, string> dict{ {"ABC", "123"}, {"BCD", "234"} };
 
 `unordered_map`, `unordered_set`, `unordered_multimap`, `unordered_multiset`
 
+注意它只能在不需要排序的时候可以提高查找性能。
+
