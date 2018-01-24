@@ -36,3 +36,47 @@
 
 由上图所说，这种算法的时间复杂度是$$O(n \alpha (n, n))$$，其中$$\alpha (n, n)$$是 Ackerman 函数的反函数，近似为常数。
 
+并查集的实现分为以下几个过程：
+
+类型定义：
+
+```cpp
+int father[10000]; 
+```
+
+初始化过程：
+
+```cpp
+for(int i = 1; i <= n; i ++)
+    father[i] = i;
+```
+
+find\(x\) 过程，查找父亲节点的编号：
+
+```cpp
+int find(int x)
+{
+    return x == father[x] ? x : find(father[x]);
+}
+```
+
+Union\(x, y\) 过程，表示合并 x 和 y 所在的集合：
+
+```cpp
+void unionn(int x, int y)
+{
+    x = find(x);
+    y = find(y);
+    //假定 x 和 y 不在一个集合
+    father[x] = y;
+}
+```
+
+并查集只是一个模型，我们需要解决一些其他问题。
+
+例题：[POJ 1308](http://poj.org/problem?id=1308) & [HDU 1272](http://acm.hdu.edu.cn/showproblem.php?pid=1272)，我们需要判断这些边能不能组成树。这里需要利用并查集了。如果有一组边\(a, b\), a和b有边间接相连还要再连一下的话，就不满足树的定义了。见下图：
+
+![](/PIC_Day4_5.png)
+
+我们需要知道虚线边是否属于这个树。于是可以用并查集求解。
+
