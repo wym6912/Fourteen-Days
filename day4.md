@@ -84,5 +84,44 @@ void unionn(int x, int y)
 
 ### 2. 带权并查集
 
-在一些并查集里，元素与元素之间存在一定的关系，它们不能简单地像上文所述那样进行合并。我们需要一个`rank`数组表示它们之间的关系。
+在一些并查集里，元素与元素之间存在一定的关系，它们不能简单地像上文所述那样进行合并。我们需要一个`rank`数组表示它们之间的关系。时间复杂度为 $$O(n \log {n})$$
+
+例题：[POJ 1182](http://poj.org/problem?id=1182)，我们需要一个`rank`数组表示动物与动物之间的关系。rank\[x\] == 0 表示 father\[x\] 与 x 同类，1 表示 father\[x\] 吃 x, 2 表示 x 吃 father\[x\]。
+
+判断假话的一个条件： \(rank\[y\] - rank\[x\] + 3\) % 3 != D - 1
+
+注意这里的 find 函数和 unionn 函数
+
+find\(x\)：
+
+```cpp
+int find(int x)
+{
+	if(x != father[x])
+	{
+		int t = father[x];
+		father[x] = find(father[x]);
+		rank[x] = (rank[x] + rank[t]) % 3; // 反映了 rank 数组的本质
+	}
+	return father[x];
+}
+```
+
+unionn\(x, y\) ：
+
+```cpp
+void unionn(int x, int y, int d)
+{
+	//不能路径压缩！
+	int xf = find(x), yf = find(y);
+	father[xf] = yf;
+	rank[xf] = (rank[y] - rank[x] + 3 + d) % 3;
+}
+```
+
+练习题：[POJ 2492 ](http://poj.org/problem?id=2492)
+
+[kuangbin 专题 5](https://vjudge.net/contest/166939)
+
+今天的并查集旅程就到这里。我们明天再见！
 
