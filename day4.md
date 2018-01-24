@@ -41,7 +41,7 @@
 类型定义：
 
 ```cpp
-int father[10000]; 
+int father[10000];
 ```
 
 初始化过程：
@@ -79,4 +79,6 @@ void unionn(int x, int y)
 ![](/PIC_Day4_5.png)
 
 我们需要知道虚线边是否属于这个树。于是可以用并查集求解。
+
+例题：[HDU 1213](http://acm.hdu.edu.cn/showproblem.php?pid=1213)，求一个无向图内有多少个连通块。也可以用并查集求解。
 
