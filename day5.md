@@ -16,9 +16,11 @@
 
 在一类问题中，我们需要经常处理可以映射在一个坐标轴上的一些固定线段，例如说映射在OX轴上的线段。由于线段是可以互相覆盖的，有时需要动态地取线段的并，例如取得并区间的总长度，或者并区间的个数等等。一个线段是对应于一个区间的，因此线段树也可以叫做区间树。
 
-线段树是一棵二叉树，树中的每一个结点表示了一个区间$$[a, b]$$。每一个叶子节点表示了一个单位区间。对于每一个非叶结点所表示的结点$$[a, b]$$，其左儿子表示的区间为$$[a, \frac {a+b} {2}]$$，右儿子表示的区间为$$[ \frac {a+b} {2}, b]$$。 见下图所示。
+线段树是一棵二叉树，树中的每一个结点表示了一个区间$$[a, b)$$。每一个叶子节点表示了一个单位区间。对于每一个非叶结点所表示的结点$$[a, b)$$，其左儿子表示的区间为$$[a, \frac {a+b} {2})$$，右儿子表示的区间为$$[ \frac {a+b} {2}, b)$$。 见下图所示。
 
 ![](/PIC_Day5_1.png)
+
+注意我的实现是表示一个$$[a, b]$$的区间，左儿子是$$[a, \frac {a + b} {2}]$$，右儿子是$$(\frac {a + b} {2}, b]$$。
 
 可以证明任意区间 \(1到N范围内\) 最多只需要$$O(\log {N})$$个线段树的节点区间拼接而成，加上线段树的深度是$$O(\log {N})$$,所以上述以及类似区间型操作可以在对数时间内完成。对于上图，我们需要 17 个结点保存$$[1, 10]$$内的信息。可以证明，我们最多需要$$4 \times N$$个结点保存。
 
@@ -38,7 +40,7 @@
 
 话不多说，我们先看一道例题。
 
-例题1：[HDU 1166](http://acm.hdu.edu.cn/showproblem.php?pid=1166)，这一道题是线段树的单点修改和区间查询。这一道题询问的是区间的和。那么问题来了：怎么去实现这个结构？
+例题：[HDU 1166](http://acm.hdu.edu.cn/showproblem.php?pid=1166)，这一道题是线段树的单点修改和区间查询。这一道题询问的是区间的和。那么问题来了：怎么去实现这个结构？
 
 首先，我们需要对问题进行分析：
 
@@ -48,7 +50,7 @@
 
 可以不需要访问 4, 5, 6, 7 即可知道结果。
 
-如果修改 7 怎么办？
+如果修改 7 怎么办？注意，这些题的实现可能与图不符。
 
 ![](/PIC_Day5_3.png)
 
@@ -74,7 +76,7 @@ typedef struct
 我们需要开出比范围要大 4 倍的数组：
 
 ```cpp
-node tree[30005];
+node tree[max_node * 4]; //max_node 表示最多需要维护多少个结点
 ```
 
 我们可以发现一个性质：如果`l == r`，递归结束，这个结点表示这一段区间的和。则预处理$$n$$个数按照这样写：
@@ -82,14 +84,14 @@ node tree[30005];
 ```cpp
 void pre(int l, int r, int p) //表示[l, r] 区间，在线段树上的位置是 p
 {
-	if(l == r){scanf("%d", &tree[p].sum);return ;}
-	else
-	{
-		int mid = midf(l, r);
-		pre(l, mid, DXA(p));     //在我的代码里，左儿子表示[l, (l + r) >> 1]
-		pre(mid + 1, r, DXB(p)); //右儿子表示[((l + r) >> 1) + 1, r]
-		pushup(p, l, r);
-	}
+    if(l == r){scanf("%d", &tree[p].sum);return ;}
+    else
+    {
+        int mid = midf(l, r);
+        pre(l, mid, DXA(p));     //在我的代码里，左儿子表示[l, (l + r) >> 1]
+        pre(mid + 1, r, DXB(p)); //右儿子表示[((l + r) >> 1) + 1, r]
+        pushup(p, l, r);
+    }
 }
 ```
 
@@ -100,33 +102,33 @@ pushup 的功能在后面会提及。
 ```cpp
 long long query(int l, int r, int nl, int nr, int p) // 在 [l, r] 查询区间和，当前区间是 [nl, nr]，在线段树第 p 位
 {
-	if(l <= nl && nr <= r)
-		return tree[p].sum;
-	long long ans = 0;
-	int mid = midf(nl, nr);
-	if(l <= mid)ans += query(l, r, nl, mid, DXA(p));
-	if(mid < r) ans += query(l, r, mid + 1, nr, DXB(p));
-	return ans;
+    if(l <= nl && nr <= r)
+        return tree[p].sum;
+    long long ans = 0;
+    int mid = midf(nl, nr);
+    if(l <= mid)ans += query(l, r, nl, mid, DXA(p));
+    if(mid < r) ans += query(l, r, mid + 1, nr, DXB(p));
+    return ans;
 }
 ```
 
-现在我们来完成单点修改 update 函数：
+现在我们来完成单点修改 update 函数：（并没有把标记修改到这些区间上，只修改了点）
 
 ```cpp
 void update(int nl, int nr, int px, int ans, int p)
 {
-	if(px == nr && nl == px)
-	{
-		tree[p].sum += ans;
-		return ;
-	}
-	else
-	{
-		int mid = midf(nl, nr);
-		if(px <= mid)update(nl, mid, px, ans, DXA(p));
-		if(mid < px) update(mid + 1, nr, px, ans, DXB(p));
-		pushup(p, nl, nr); //一定要注意更新的区域
-	}
+    if(px == nr && nl == px)
+    {
+        tree[p].sum += ans;
+        return ;
+    }
+    else
+    {
+        int mid = midf(nl, nr);
+        if(px <= mid)update(nl, mid, px, ans, DXA(p));
+        if(mid < px) update(mid + 1, nr, px, ans, DXB(p));
+        pushup(p, nl, nr); //一定要注意更新的区域
+    }
 }
 ```
 
@@ -144,16 +146,38 @@ void pushup(int p, int l, int r)
 
 [HDU 1166 答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/12f32f6d399d4a88fed9c5b31e353bf558d67804/HDU/1166.cpp)
 
-例题 2：[HDU 1754](http://acm.hdu.edu.cn/showproblem.php?pid=1754)，这次我们需要维护的是最大值了。我们只需要修改 pushup 函数即可。
+例题：[HDU 1754](http://acm.hdu.edu.cn/showproblem.php?pid=1754)，这次我们需要维护的是最大值了。我们只需要修改 pushup 函数和 query 函数即可。
 
 ```cpp
 void pushup(int p)
 {
-	tree[p].sum = max(tree[DXA(p)].sum, tree[DXB(p)].sum);
+    tree[p].sum = max(tree[DXA(p)].sum, tree[DXB(p)].sum);
+}
+```
+
+query 函数应该返回的是最大值。
+
+```cpp
+int query(int l, int r, int nl, int nr, int p)
+{
+	if(l <= nl && nr <= r)
+		return tree[p].sum;
+	else 
+	{
+		int ans = -INF; //需要将 ans 赋初值
+		int mid = midf(nl, nr);
+		if(l <= mid)
+			ans = max(ans, query(l, r, nl, mid, DXA(p)));
+		if(mid < r)
+			ans = max(ans, query(l, r, mid + 1, nr, DXB(p)));
+		return ans;
+	}
 }
 ```
 
 [HDU 1754 答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/12f32f6d399d4a88fed9c5b31e353bf558d67804/HDU/1754.cpp)
 
+例题：[PPOJ 135](http://ppoj.ac.cn/problem/135)，我们需要维护$$[1, 60000]$$内的信息。`a = 1`表示能力值为$$p$$的人数加1，`a = 2`表示能力值为$$p$$的人数减1，`a = 3`表示查询$$(p, 60000]$$的人数。可以利用线段树维护，
 
+[答案](http://ppoj.ac.cn/submission/1117)
 
