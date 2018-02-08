@@ -1,4 +1,4 @@
-## 第 5 天 线段树\(I\) 线段树绪论 点修改 区间修改
+## 第 5 天 线段树\(I\) 线段树绪论 点修改
 
 今天是来自 XDU 的 V8 老师，他讲的是博弈论和单调队列。能听懂简单的博弈论，搞不懂单调队列。真的气。
 
@@ -177,9 +177,21 @@ int query(int l, int r, int nl, int nr, int p)
 
 [HDU 1754 答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/12f32f6d399d4a88fed9c5b31e353bf558d67804/HDU/1754.cpp)
 
+例题：[XDOJ 1009](http://acm.xidian.edu.cn/problem.php?id=1009)，这道题假设一共有$$n$$个人，每次需要求第$$m$$个出队的人。我们可以这样想：先可以求出相对位置，再求出绝对位置。每次出队以后，需要把这个人设为0。
+
+```cpp
+tmp = (tmp + m - 1) % tree[1].data; 
+//tree[1].data 表示总人数，因为对于每个人p，[p, p] == 1表示这个人存在，[p, p] == 0表示这个人不存在
+// tmp 每次保存相对位置
+if(tmp == 0)tmp = tree[1].data;
+pos = query(1, n, tmp, 1);  //pos 为绝对位置
+```
+
+[XDOJ 1009 答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/c77b70ca571d73390a9de736b4e20c69bed72fe2/XDU/1009.cpp)
+
 练习题：[PPOJ 135](http://ppoj.ac.cn/problem/135)，我们需要维护$$[1, 60000]$$内的信息。`a = 1`表示能力值为$$p$$的人数加1，`a = 2`表示能力值为$$p$$的人数减1，`a = 3`表示查询$$(p, 60000]$$的人数。可以利用线段树维护。[答案](http://ppoj.ac.cn/submission/1117)
 
 练习题：[UVA12299](https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3720)
 
-
+今天的线段树旅程就到这里。我们明天再见！
 
