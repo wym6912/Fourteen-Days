@@ -10,6 +10,8 @@
 
 [入门班第 5 天练习题](https://cn.vjudge.net/contest/176912)
 
+[入门班第 6 天练习题](https://vjudge.net/contest/177296)
+
 那么，我们从搜索开始吧。
 
 #### 0. 搜索概论
