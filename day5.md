@@ -54,20 +54,106 @@
 
 现在，我们来实现这个结构吧！
 
+在我的代码中，有以下定义宏：
+
+```cpp
+# define midf(a, b) (((a) + (b)) >> 1)
+# define DXA(_) ((_) << 1)
+# define DXB(_) (((_) << 1) | 1)
+```
+
 定义一个结构体：
 
 ```cpp
 typedef struct
 {
-	int sum; //表示一段区间的和 [l, r]
+    int sum; //表示一段区间的和 [l, r]
 }node;
 ```
 
 我们需要开出比范围要大 4 倍的数组：
 
 ```cpp
-node tree[30005]; 
+node tree[30005];
 ```
+
+我们可以发现一个性质：如果`l == r`，递归结束，这个结点表示这一段区间的和。则预处理$$n$$个数按照这样写：
+
+```cpp
+void pre(int l, int r, int p) //表示[l, r] 区间，在线段树上的位置是 p
+{
+	if(l == r){scanf("%d", &tree[p].sum);return ;}
+	else
+	{
+		int mid = midf(l, r);
+		pre(l, mid, DXA(p));     //在我的代码里，左儿子表示[l, (l + r) >> 1]
+		pre(mid + 1, r, DXB(p)); //右儿子表示[((l + r) >> 1) + 1, r]
+		pushup(p, l, r);
+	}
+}
+```
+
+pushup 的功能在后面会提及。
+
+现在我们需要查询一段区间的和，我们这样写 query 函数：
+
+```cpp
+long long query(int l, int r, int nl, int nr, int p) // 在 [l, r] 查询区间和，当前区间是 [nl, nr]，在线段树第 p 位
+{
+	if(l <= nl && nr <= r)
+		return tree[p].sum;
+	long long ans = 0;
+	int mid = midf(nl, nr);
+	if(l <= mid)ans += query(l, r, nl, mid, DXA(p));
+	if(mid < r) ans += query(l, r, mid + 1, nr, DXB(p));
+	return ans;
+}
+```
+
+现在我们来完成单点修改 update 函数：
+
+```cpp
+void update(int nl, int nr, int px, int ans, int p)
+{
+	if(px == nr && nl == px)
+	{
+		tree[p].sum += ans;
+		return ;
+	}
+	else
+	{
+		int mid = midf(nl, nr);
+		if(px <= mid)update(nl, mid, px, ans, DXA(p));
+		if(mid < px) update(mid + 1, nr, px, ans, DXB(p));
+		pushup(p, nl, nr); //一定要注意更新的区域
+	}
+}
+```
+
+pushup 函数， 它的作用是把子树上的和更新到这个点：
+
+```cpp
+void pushup(int p, int l, int r)
+{
+    if(l < r)
+        tree[p].sum = tree[DXA(p)].sum + tree[DXB(p)].sum;
+}
+```
+
+再把主函数一些，这道题就完成了。
+
+[HDU 1166 答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/12f32f6d399d4a88fed9c5b31e353bf558d67804/HDU/1166.cpp)
+
+例题 2：[HDU 1754](http://acm.hdu.edu.cn/showproblem.php?pid=1754)，这次我们需要维护的是最大值了。我们只需要修改 pushup 函数即可。
+
+```cpp
+void pushup(int p)
+{
+	tree[p].sum = max(tree[DXA(p)].sum, tree[DXB(p)].sum);
+}
+```
+
+[HDU 1754 答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/12f32f6d399d4a88fed9c5b31e353bf558d67804/HDU/1754.cpp)
 
 
 
