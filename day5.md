@@ -160,24 +160,26 @@ query 函数应该返回的是最大值。
 ```cpp
 int query(int l, int r, int nl, int nr, int p)
 {
-	if(l <= nl && nr <= r)
-		return tree[p].sum;
-	else 
-	{
-		int ans = -INF; //需要将 ans 赋初值
-		int mid = midf(nl, nr);
-		if(l <= mid)
-			ans = max(ans, query(l, r, nl, mid, DXA(p)));
-		if(mid < r)
-			ans = max(ans, query(l, r, mid + 1, nr, DXB(p)));
-		return ans;
-	}
+    if(l <= nl && nr <= r)
+        return tree[p].sum;
+    else 
+    {
+        int ans = -INF; //需要将 ans 赋初值
+        int mid = midf(nl, nr);
+        if(l <= mid)
+            ans = max(ans, query(l, r, nl, mid, DXA(p)));
+        if(mid < r)
+            ans = max(ans, query(l, r, mid + 1, nr, DXB(p)));
+        return ans;
+    }
 }
 ```
 
 [HDU 1754 答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/12f32f6d399d4a88fed9c5b31e353bf558d67804/HDU/1754.cpp)
 
-例题：[PPOJ 135](http://ppoj.ac.cn/problem/135)，我们需要维护$$[1, 60000]$$内的信息。`a = 1`表示能力值为$$p$$的人数加1，`a = 2`表示能力值为$$p$$的人数减1，`a = 3`表示查询$$(p, 60000]$$的人数。可以利用线段树维护，
+练习题：[PPOJ 135](http://ppoj.ac.cn/problem/135)，我们需要维护$$[1, 60000]$$内的信息。`a = 1`表示能力值为$$p$$的人数加1，`a = 2`表示能力值为$$p$$的人数减1，`a = 3`表示查询$$(p, 60000]$$的人数。可以利用线段树维护。[答案](http://ppoj.ac.cn/submission/1117)
 
-[答案](http://ppoj.ac.cn/submission/1117)
+练习题：[UVA12299](https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3720)
+
+
 
