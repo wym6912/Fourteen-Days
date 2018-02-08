@@ -4,7 +4,7 @@
 
 [提高班第 3 天练习题\(增加\)](https://vjudge.net/contest/176236)
 
-[提高班第 4 天练习题](#)
+[提高班第 4 天练习题](https://vjudge.net/contest/176665)
 
 [提高班第 4 天练习题\(增加\)](https://vjudge.net/contest/209149) 六个月后增加
 
@@ -97,13 +97,13 @@ find\(x\)：
 ```cpp
 int find(int x)
 {
-	if(x != father[x])
-	{
-		int t = father[x];
-		father[x] = find(father[x]);
-		rank[x] = (rank[x] + rank[t]) % 3; // 反映了 rank 数组的本质
-	}
-	return father[x];
+    if(x != father[x])
+    {
+        int t = father[x];
+        father[x] = find(father[x]);
+        rank[x] = (rank[x] + rank[t]) % 3; // 反映了 rank 数组的本质
+    }
+    return father[x];
 }
 ```
 
@@ -112,10 +112,10 @@ unionn\(x, y\) ：
 ```cpp
 void unionn(int x, int y, int d)
 {
-	//不能路径压缩！
-	int xf = find(x), yf = find(y);
-	father[xf] = yf;
-	rank[xf] = (rank[y] - rank[x] + 3 + d) % 3;
+    //不能路径压缩！
+    int xf = find(x), yf = find(y);
+    father[xf] = yf;
+    rank[xf] = (rank[y] - rank[x] + 3 + d) % 3;
 }
 ```
 
