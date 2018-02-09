@@ -160,14 +160,14 @@ long long query(int l, int r, int nl, int nr, int p, long long tags)
 ```cpp
 void pushdown(int p, int l) //位置为 p 的结点，表示区间为[l, r]
 {
-	if(tree[p].lazy)//有标记才需要下传
-	{
-		tree[DXA(p)].lazy = tree[DXB(p)].lazy = tree[p].lazy; 
-		tree[DXA(p)].data = (l - (l >> 1)) * tree[p].lazy;  
-		//一定要注意这里：如果在这里更新过孩子结点的信息，就不要调用 pushup() 函数
-		tree[DXB(p)].data = (l >> 1) * tree[p].lazy;  
-		tree[p].lazy = 0;
-	}
+    if(tree[p].lazy)//有标记才需要下传
+    {
+        tree[DXA(p)].lazy = tree[DXB(p)].lazy = tree[p].lazy; 
+        tree[DXA(p)].data = (l - (l >> 1)) * tree[p].lazy;  
+        //一定要注意这里：如果在这里更新过孩子结点的信息，就不要调用 pushup() 函数
+        tree[DXB(p)].data = (l >> 1) * tree[p].lazy;  
+        tree[p].lazy = 0;
+    }
 }
 ```
 
@@ -176,20 +176,20 @@ update 函数：
 ```cpp
 void update(int l, int r, int nl, int nr, int d, int p)
 {
-	if(l <= nl && nr <= r)
-	{
-		tree[p].lazy = d;
-		tree[p].data = tree[p].lazy * (nr - nl + 1);
-		return ;
-	}
-	else 
-	{
-		pushdown(p, nr - nl + 1);//标记下传
-		int mid = midf(nl, nr);
-		if(l <= mid)update(l, r, nl, mid, d, DXA(p));
-		if(mid < r)update(l, r, mid + 1, nr, d, DXB(p));
-	}
-	pushup(p, nl, nr);
+    if(l <= nl && nr <= r)
+    {
+        tree[p].lazy = d;
+        tree[p].data = tree[p].lazy * (nr - nl + 1);
+        return ;
+    }
+    else 
+    {
+        pushdown(p, nr - nl + 1);//标记下传
+        int mid = midf(nl, nr);
+        if(l <= mid)update(l, r, nl, mid, d, DXA(p));
+        if(mid < r)update(l, r, mid + 1, nr, d, DXB(p));
+    }
+    pushup(p, nl, nr);
 }
 ```
 
@@ -198,29 +198,29 @@ void update(int l, int r, int nl, int nr, int d, int p)
 ```cpp
 void pushdown(int p)
 {
-	if(tree[p].lazy)
-	{
-		tree[DXA(p)].lazy = tree[DXB(p)].lazy = tree[p].lazy;
-		tree[p].lazy = 0;
-		//不重算结点的信息
-	}
+    if(tree[p].lazy)
+    {
+        tree[DXA(p)].lazy = tree[DXB(p)].lazy = tree[p].lazy;
+        tree[p].lazy = 0;
+        //不重算结点的信息
+    }
 }
 
 void update(int l, int r, int nl, int nr, int d, int p)
 {
-	if(l <= nl && nr <= r)
-	{
-		tree[p].lazy = d;
-		pushup(p, nl, nr);
-		return ;
-	}
-	pushdown(p);
-	int mid = midf(nl, nr);
-	if(l <= mid)update(l, r, nl, mid, d, DXA(p));
-	else pushup(DXA(p), nl, mid); // 在标记下传以后，需要重新计算结点的信息
-	if(mid < r)update(l, r, mid + 1, nr, d, DXB(p));
-	else pushup(DXB(p), mid + 1, nr);
-	pushup(p, nl, nr);
+    if(l <= nl && nr <= r)
+    {
+        tree[p].lazy = d;
+        pushup(p, nl, nr);
+        return ;
+    }
+    pushdown(p);
+    int mid = midf(nl, nr);
+    if(l <= mid)update(l, r, nl, mid, d, DXA(p));
+    else pushup(DXA(p), nl, mid); // 在标记下传以后，需要重新计算结点的信息
+    if(mid < r)update(l, r, mid + 1, nr, d, DXB(p));
+    else pushup(DXB(p), mid + 1, nr);
+    pushup(p, nl, nr);
 }
 ```
 
@@ -229,9 +229,9 @@ void update(int l, int r, int nl, int nr, int d, int p)
 ```cpp
 void pushup(int p, int l, int r)
 {
-	tree[p].data = 0;
-	if(r > l)tree[p].data = tree[DXA(p)].data + tree[DXB(p)].data;
-	tree[p].data += tree[p].lazy * (r - l + 1);
+    tree[p].data = 0;
+    if(r > l)tree[p].data = tree[DXA(p)].data + tree[DXB(p)].data;
+    tree[p].data += tree[p].lazy * (r - l + 1);
 }
 ```
 
@@ -240,18 +240,18 @@ query 函数可以这样写：
 ```cpp
 int query(int l, int r, int nl, int nr, int p)
 {
-	if(tree[p].lazy)
-		return tree[p].lazy * (min(nr, r) - max(nl, l) + 1);
-	else if(l <= nl && nr <= r)
-		return tree[p].data;
-	else
-	{
-		int mid = midf(nl, nr);
-		int ans = 0;
-		if(l <= mid)ans += query(l, r, nl, mid, DXA(p));
-		if(mid < r) ans += query(l, r, mid + 1, nr, DXB(p));
-		return ans;
-	}
+    if(tree[p].lazy)
+        return tree[p].lazy * (min(nr, r) - max(nl, l) + 1);
+    else if(l <= nl && nr <= r)
+        return tree[p].data;
+    else
+    {
+        int mid = midf(nl, nr);
+        int ans = 0;
+        if(l <= mid)ans += query(l, r, nl, mid, DXA(p));
+        if(mid < r) ans += query(l, r, mid + 1, nr, DXB(p));
+        return ans;
+    }
 }
 ```
 
@@ -260,20 +260,20 @@ int query(int l, int r, int nl, int nr, int p)
 ```cpp
 int query(int l, int r, int nl, int nr, int p)
 {
-	if(l <= nl && nr <= r)
-		return tree[p].data;
-	else
-	{
-		pushdown(p);
-		int mid = midf(nl, nr);
-		int ans = 0;
-		if(l <= mid)ans += query(l, r, nl, mid, DXA(p));
-		else pushup(DXA(p), nl, mid);
-		if(mid < r) ans += query(l, r, mid + 1, nr, DXB(p));
-		else pushup(DXB(p), mid + 1, nr);
-		pushup(p, nl, nr);
-		return ans;
-	}
+    if(l <= nl && nr <= r)
+        return tree[p].data;
+    else
+    {
+        pushdown(p);
+        int mid = midf(nl, nr);
+        int ans = 0;
+        if(l <= mid)ans += query(l, r, nl, mid, DXA(p));
+        else pushup(DXA(p), nl, mid);
+        if(mid < r) ans += query(l, r, mid + 1, nr, DXB(p));
+        else pushup(DXB(p), mid + 1, nr);
+        pushup(p, nl, nr);
+        return ans;
+    }
 }
 ```
 
@@ -286,9 +286,7 @@ int query(int l, int r, int nl, int nr, int p)
 2. 查询 [a, b] 的总和/最值。
 ```
 
-练习题：[POJ 2777](http://poj.org/problem?id=2777)，可以利用位运算表示一个区间的颜色
+练习题：[POJ 2777](http://poj.org/problem?id=2777)，可以利用位运算表示一个区间的颜色 [答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/master/POJ/2777.cpp)
 
-
-
-
+练习题：[ZOJ 1610](http://acm.zju.edu.cn/onlinejudge/showProblem.do?problemCode=1610)，注意是在$$[0, 8000]$$区间里面染$$(l, r)$$，询问的是这个区域有多少颜色，各个颜色长度为多少。[答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/master/ZOJ/1610.cpp)
 
