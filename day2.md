@@ -34,7 +34,7 @@
 
 xjb整理的...C 和 D 都需要用主席树， gg
 
-A 题是一道可以抽象成函数$$f(x) = num(\exists i, j, |data_i - data_j| = x)$$，$$num()$$表示满足条件的对数。我需要什么值呢？一共有$$\begin {pmatrix} n \\ 2 \end {pmatrix}$$对，然而根据题的性质，我们只需比较$$\frac{\begin {pmatrix} n \\ 2 \end {pmatrix}}{2}$$与$$f(x)$$的关系。
+A 题是一道可以抽象成函数$$f(x) = num(\exists i, j, |data_i - data_j| = x)$$，$$num()$$表示满足条件的对数。我需要什么值呢？一共有$$\begin {pmatrix} n \\ 2 \end {pmatrix}$$对，然而根据题的性质，我们只需比较$$\frac{\begin {pmatrix} n \\ 2 \end {pmatrix}}{2}$$\($$C ^{2} _{n} /  2$$\)与$$f(x)$$的关系。
 
 B 题也是一样的，可以抽象一个函数$$f(x) = \sum \frac{r[i] ^  2} {x}$$，这道题的问题在于精度问题，4位小数，还有注意$$\pi$$和$$eps$$的取值，$$\pi$$必须在外面乘（感觉是因为$$\pi$$的精度不够），$$eps$$应该取$$1e-6$$
 
