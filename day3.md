@@ -95,6 +95,8 @@ int DFS(int k) 　
 
 考虑每行有且仅有一个皇后，设一维数组A\[8\]\[8\]表示皇后的放置：第i行皇后放在第j列，用A\[i\]=j来表示，即下标是行数，内容是列数。例如：A\[3\]=5就表示第3个皇后在第3行第5列上。
 
+[答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/master/HDU/2553.cpp)
+
 最优化剪枝就是如果当前结果已经无法达到已存储的结果，可以剪枝的一种方法。
 
 例题：[PPOJ 12  ](http://ppoj.ac.cn/problem/12)，初看是个图论题。但是没想到该怎么做，于是gg。但是看到数据范围，窝开心了：爆搜就行了！
@@ -229,7 +231,9 @@ int bfs(int fx, int fy)
 }
 ```
 
-习题：[PPOJ 3](http://ppoj.ac.cn/problem/3)，（答案：[Submission](http://ppoj.ac.cn/submission/992)）；[HDU 4741](http://acm.hdu.edu.cn/showproblem.php?pid=4771)，[HDU 5025](http://acm.hdu.edu.cn/showproblem.php?pid=5025)
+[答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/master/HDU/4845.cpp)
+
+习题：[PPOJ 3](http://ppoj.ac.cn/problem/3)，（答案：[Submission](http://ppoj.ac.cn/submission/992)）；[HDU 4771](http://acm.hdu.edu.cn/showproblem.php?pid=4771)（[答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/master/HDU/4771.cpp)），[HDU 5025](http://acm.hdu.edu.cn/showproblem.php?pid=5025)（[答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/master/HDU/5025.cpp)）
 
 #### 4.双向搜索
 
