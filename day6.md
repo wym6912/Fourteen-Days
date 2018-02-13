@@ -292,3 +292,120 @@ int query(int l, int r, int nl, int nr, int p)
 
 练习题：[ZOJ 1610](http://acm.zju.edu.cn/onlinejudge/showProblem.do?problemCode=1610)，注意是在$$[0, 8000]$$区间里面染$$(l, r)$$，询问的是这个区域有多少颜色，各个颜色长度为多少。[答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/master/ZOJ/1610.cpp)
 
+#### 1'. 线段树的区间修改 - 续
+
+在看 [kuangbin 专题 7](https://vjudge.net/contest/166945) 的时候，发现一类题不能完全利用上面的方法去完成。所以特地将它总结如下：
+
+例题：[HDU 4027](http://acm.hdu.edu.cn/showproblem.php?pid=4027)，将$$[l, r]$$中所有数都开根号（向下取整），并求和。例如样例：
+
+```
+10
+1 2 3 4 5 6 7 8 9 10
+5
+0 1 10
+1 1 10
+1 1 5
+0 5 8
+1 4 8
+```
+
+对$$[1, 10]$$开根号以后，序列变为
+
+```
+1 1 1 2 2 2 2 2 3 3
+```
+
+发现什么了吗？如果对单个数开根号的话，一定会**收敛**到`1`的。
+
+所以我们在更新这个序列的时候，判断如果区间$$[l, r]$$到了收敛值，不再更新子区间。
+
+这个怎么实现呢？
+
+修改 update 函数：
+
+```cpp
+void update(int l, int r, int nl, int nr, int data, int p)
+{
+	if(l <= nl && nr <= r)
+	{
+		if(tree[p].data == nr - nl + 1) //在这里优化了 一个 ll 型的数开方次数有限 
+			return ;
+	}
+	if(nl == nr)//注意区间的表示 
+	{
+		tree[p].data = (ll)sqrt(tree[p].data * 1.0);
+		return ;
+	}
+	int mid = midf(nl, nr);
+	if(l <= mid)update(l, r, nl, mid, data, DXA(p));
+	if(mid < r) update(l, r, mid + 1, nr, data, DXB(p));
+	pushup(p);
+}
+```
+
+[答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/master/HDU/4027.cpp)
+
+（穿越时空的一道题）例题：[CodeForces 920F](http://codeforces.com/contest/920/problem/F)，将$$[l, r]$$更新为$$f(l), f(l + 1), ..., f(r)$$，其中$$f(x) = $$能整除$$x$$的个数。例如样例：
+
+```
+7 6
+6 4 1 10 3 2 4
+1 1 7
+2 4 5
+1 3 5
+2 4 4
+1 5 7
+2 1 7
+```
+
+经历了第 1 个变换后，得到
+
+```
+4 3 1 4 2 2 3
+```
+
+发现什么了吗？如果对单个数做$$f$$变换的话，一定会**收敛**到`1`或者`2`的。注意这里有两个收敛值！
+
+跟上一道题一样，如果$$[l, r]$$到了收敛值，不再更新子区间。
+
+针对这种情况，我们需要这样修改 update 函数：
+
+```cpp
+void update(int l, int r, int nl, int nr, int p)
+{
+	if(tree[p].max_d <= 2)return ; //需要统计最大值，修改 pushup 函数实现
+	if(nl == nr)
+	{
+		tree[p].tag ++;
+		while(tree[p].tag > 0)
+		{
+			tree[p].sum = trans[tree[p].sum];
+			tree[p].tag --;
+			if(tree[p].sum <= 2)break;
+		}
+		pushup_2(p);
+		return ;
+	}
+	pushdown(p);
+	int mid = midf(nl, nr);
+	if(l <= mid)update(l, r, nl, mid, DXA(p));
+	else pushup(DXA(p), nl, mid);
+	if(mid < r) update(l, r, mid + 1, nr, DXB(p));
+	else pushup(DXB(p), mid + 1, nr);
+	pushup(p, nl, nr);
+}
+```
+
+[答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/master/CodeForces/920F.cpp)
+
+这两道题可以将模型抽象如下：
+
+```
+1. 将 [a, b] 的每个值改为 f(a), f(a + 1), ..., f(b), 其中 f(x) 满足收敛性质；
+2. 查询 [a, b] 的总和。
+```
+
+#### 2. 线段树的问题转换
+
+（待更新）
+
