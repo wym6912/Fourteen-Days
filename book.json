@@ -1,0 +1,25 @@
+{
+	"gitbook": "3.x.x",
+	"title": "ACM ICPC 14 ÃÏ–°Ω·",
+	"description": "",
+	"language": "zh-hans",
+	"plugins": ["katex", "yahei"],
+	"pluginsConfig": {
+		"fontSettings": {
+			"theme": "white",
+			"family": "msyh",
+			"size": 2
+		}
+	},
+	"pdf": {
+		"pageNumbers": true,
+		"fontSize": 24,
+		"paperSize": "a4",
+		"margin": {
+			"right": 10,
+			"left": 10,
+			"top": 10,
+			"bottom": 15
+		}
+	}
+}
