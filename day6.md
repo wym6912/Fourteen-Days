@@ -423,7 +423,63 @@ void update(int l, int r, int nl, int nr, int p)
 
 现在的 update 函数需要修改，query 函数修改的地方不多，这里不再赘述。
 
-#### 3. 
+这是我写的 update 和 pushdown 函数：
+
+```cpp
+void pushdown(int p, int l, int r)
+{
+	if(tree[p].add == 0 && tree[p].mul == 1)return ;
+	int mid = midf(l, r);
+	tree[DXA(p)].add = (tree[DXA(p)].add * tree[p].mul + tree[p].add) % mod;
+	tree[DXB(p)].add = (tree[DXB(p)].add * tree[p].mul + tree[p].add) % mod;
+	tree[DXA(p)].mul = (tree[p].mul * tree[DXA(p)].mul) % mod;
+	tree[DXB(p)].mul = (tree[p].mul * tree[DXB(p)].mul) % mod;
+	tree[DXA(p)].sum = (tree[DXA(p)].sum * tree[p].mul + (mid - l + 1) * tree[p].add) % mod;
+	tree[DXB(p)].sum = (tree[DXB(p)].sum * tree[p].mul + (r - mid) * tree[p].add) % mod;
+	tree[p].add = 0;
+	tree[p].mul = 1;
+}
+
+void update_add(int l, int r, int nl, int nr, ll a, int p)
+{
+	if(l <= nl && nr <= r)
+	{
+		tree[p].add = (tree[p].add + a) % mod; //注意与 update_mul 的比较
+		tree[p].sum = ((nr - nl + 1) * a + tree[p].sum) % mod;
+		return ;
+	}
+	pushdown(p, nl, nr);
+	int mid = midf(nl, nr);
+	if(l <= mid)update_add(l, r, nl, mid, a, DXA(p));
+	if(mid < r) update_add(l, r, mid + 1, nr, a, DXB(p));
+	pushup(p, nl, nr);
+}
+
+
+void update_mul(int l, int r, int nl, int nr, ll m, int p)
+{
+	if(l <= nl && nr <= r)
+	{
+		tree[p].mul = (tree[p].mul * m) % mod;//注意与 update_mul 的比较
+		tree[p].add = (tree[p].add * m) % mod;
+		tree[p].sum = (tree[p].sum * m) % mod;
+		return ;
+	}
+	pushdown(p, nl, nr);
+	int mid = midf(nl, nr);
+	if(l <= mid)update_mul(l, r, nl, mid, m, DXA(p));
+	if(mid < r) update_mul(l, r, mid + 1, nr, m, DXB(p));
+	pushup(p, nl, nr);
+}
+```
+
+练习题：[ZOJ 3998](http://acm.zju.edu.cn/onlinejudge/showProblem.do?problemCode=3998) 需要使用 Euler 降幂公式：$${a^{b^c}} {mod} {m} = a^{{b^c} {mod} {phi}(m)} {mod} {m}$$
+
+如果出现了三重标记怎么办？[HDU 4578](http://acm.hdu.edu.cn/showproblem.php?pid=4578)
+
+#### 3. 线段树的一些骨骼清奇题目
+
+以为 ZOJ 3998 和 ZOJ 4009 一样...结果一写才发现不太对劲...
 
 
 
