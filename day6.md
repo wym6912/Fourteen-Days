@@ -326,20 +326,20 @@ int query(int l, int r, int nl, int nr, int p)
 ```cpp
 void update(int l, int r, int nl, int nr, int data, int p)
 {
-	if(l <= nl && nr <= r)
-	{
-		if(tree[p].data == nr - nl + 1) //在这里优化了 一个 ll 型的数开方次数有限 
-			return ;
-	}
-	if(nl == nr)//注意区间的表示 
-	{
-		tree[p].data = (ll)sqrt(tree[p].data * 1.0);
-		return ;
-	}
-	int mid = midf(nl, nr);
-	if(l <= mid)update(l, r, nl, mid, data, DXA(p));
-	if(mid < r) update(l, r, mid + 1, nr, data, DXB(p));
-	pushup(p);
+    if(l <= nl && nr <= r)
+    {
+        if(tree[p].data == nr - nl + 1) //在这里优化了 一个 ll 型的数开方次数有限 
+            return ;
+    }
+    if(nl == nr)//注意区间的表示 
+    {
+        tree[p].data = (ll)sqrt(tree[p].data * 1.0);
+        return ;
+    }
+    int mid = midf(nl, nr);
+    if(l <= mid)update(l, r, nl, mid, data, DXA(p));
+    if(mid < r) update(l, r, mid + 1, nr, data, DXB(p));
+    pushup(p);
 }
 ```
 
@@ -373,26 +373,26 @@ void update(int l, int r, int nl, int nr, int data, int p)
 ```cpp
 void update(int l, int r, int nl, int nr, int p)
 {
-	if(tree[p].max_d <= 2)return ; //需要统计最大值，修改 pushup 函数实现
-	if(nl == nr)
-	{
-		tree[p].tag ++;
-		while(tree[p].tag > 0)
-		{
-			tree[p].sum = trans[tree[p].sum];
-			tree[p].tag --;
-			if(tree[p].sum <= 2)break;
-		}
-		pushup_2(p);
-		return ;
-	}
-	pushdown(p);
-	int mid = midf(nl, nr);
-	if(l <= mid)update(l, r, nl, mid, DXA(p));
-	else pushup(DXA(p), nl, mid);
-	if(mid < r) update(l, r, mid + 1, nr, DXB(p));
-	else pushup(DXB(p), mid + 1, nr);
-	pushup(p, nl, nr);
+    if(tree[p].max_d <= 2)return ; //需要统计最大值，修改 pushup 函数实现
+    if(nl == nr)
+    {
+        tree[p].tag ++;
+        while(tree[p].tag > 0)
+        {
+            tree[p].sum = trans[tree[p].sum];
+            tree[p].tag --;
+            if(tree[p].sum <= 2)break;
+        }
+        pushup_2(p);
+        return ;
+    }
+    pushdown(p);
+    int mid = midf(nl, nr);
+    if(l <= mid)update(l, r, nl, mid, DXA(p));
+    else pushup(DXA(p), nl, mid);
+    if(mid < r) update(l, r, mid + 1, nr, DXB(p));
+    else pushup(DXB(p), mid + 1, nr);
+    pushup(p, nl, nr);
 }
 ```
 
@@ -405,7 +405,23 @@ void update(int l, int r, int nl, int nr, int p)
 2. 查询 [a, b] 的总和。
 ```
 
-#### 2. 线段树的问题转换
+#### 2. 线段树的多重标记问题
+
+线段树如果它需要更新多重标记，我们应该怎么办？本节我们来探讨一下这个问题。
+
+例题：[BZOJ 1798](http://www.lydsy.com/JudgeOnline/problem.php?id=1798)，我们需要更新这个数列，需要以下几种操作：
+
+* 把数列中的一段数全部乘一个值；
+
+* 把数列中的一段数全部加一个值；
+
+* 询问数列中的一段数的和，对`mod`取模。
+
+在这里，我们需要知道的是，如果对于一段区间的所有数乘法的话，会影响这个数列的加的值。所以，我们的线段树中使用乘法和加法两种标记。加法操作和询问操作不变，乘法操作每次要把加法标记和区间和都乘上相应的数，下传标记时先下传乘法标记再下传加法标记。
+
+证明可以参考下面图片：![](/PIC_Day6_4.png)
+
+#### 3. 线段树的问题转换
 
 （待更新）
 
