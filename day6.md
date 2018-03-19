@@ -421,6 +421,8 @@ void update(int l, int r, int nl, int nr, int p)
 
 证明可以参考下面图片：![](/PIC_Day6_4.png)
 
+现在的 update 函数需要修改，query 函数修改的地方不多，这里不再赘述。
+
 #### 3. 线段树的问题转换
 
 （待更新）
