@@ -428,58 +428,143 @@ void update(int l, int r, int nl, int nr, int p)
 ```cpp
 void pushdown(int p, int l, int r)
 {
-	if(tree[p].add == 0 && tree[p].mul == 1)return ;
-	int mid = midf(l, r);
-	tree[DXA(p)].add = (tree[DXA(p)].add * tree[p].mul + tree[p].add) % mod;
-	tree[DXB(p)].add = (tree[DXB(p)].add * tree[p].mul + tree[p].add) % mod;
-	tree[DXA(p)].mul = (tree[p].mul * tree[DXA(p)].mul) % mod;
-	tree[DXB(p)].mul = (tree[p].mul * tree[DXB(p)].mul) % mod;
-	tree[DXA(p)].sum = (tree[DXA(p)].sum * tree[p].mul + (mid - l + 1) * tree[p].add) % mod;
-	tree[DXB(p)].sum = (tree[DXB(p)].sum * tree[p].mul + (r - mid) * tree[p].add) % mod;
-	tree[p].add = 0;
-	tree[p].mul = 1;
+    if(tree[p].add == 0 && tree[p].mul == 1)return ;
+    int mid = midf(l, r);
+    tree[DXA(p)].add = (tree[DXA(p)].add * tree[p].mul + tree[p].add) % mod;
+    tree[DXB(p)].add = (tree[DXB(p)].add * tree[p].mul + tree[p].add) % mod;
+    tree[DXA(p)].mul = (tree[p].mul * tree[DXA(p)].mul) % mod;
+    tree[DXB(p)].mul = (tree[p].mul * tree[DXB(p)].mul) % mod;
+    tree[DXA(p)].sum = (tree[DXA(p)].sum * tree[p].mul + (mid - l + 1) * tree[p].add) % mod;
+    tree[DXB(p)].sum = (tree[DXB(p)].sum * tree[p].mul + (r - mid) * tree[p].add) % mod;
+    tree[p].add = 0;
+    tree[p].mul = 1;
 }
 
 void update_add(int l, int r, int nl, int nr, ll a, int p)
 {
-	if(l <= nl && nr <= r)
-	{
-		tree[p].add = (tree[p].add + a) % mod; //注意与 update_mul 的比较
-		tree[p].sum = ((nr - nl + 1) * a + tree[p].sum) % mod;
-		return ;
-	}
-	pushdown(p, nl, nr);
-	int mid = midf(nl, nr);
-	if(l <= mid)update_add(l, r, nl, mid, a, DXA(p));
-	if(mid < r) update_add(l, r, mid + 1, nr, a, DXB(p));
-	pushup(p, nl, nr);
+    if(l <= nl && nr <= r)
+    {
+        tree[p].add = (tree[p].add + a) % mod; //注意与 update_mul 的比较
+        tree[p].sum = ((nr - nl + 1) * a + tree[p].sum) % mod;
+        return ;
+    }
+    pushdown(p, nl, nr);
+    int mid = midf(nl, nr);
+    if(l <= mid)update_add(l, r, nl, mid, a, DXA(p));
+    if(mid < r) update_add(l, r, mid + 1, nr, a, DXB(p));
+    pushup(p, nl, nr);
 }
 
 
 void update_mul(int l, int r, int nl, int nr, ll m, int p)
 {
+    if(l <= nl && nr <= r)
+    {
+        tree[p].mul = (tree[p].mul * m) % mod;//注意与 update_mul 的比较
+        tree[p].add = (tree[p].add * m) % mod;
+        tree[p].sum = (tree[p].sum * m) % mod;
+        return ;
+    }
+    pushdown(p, nl, nr);
+    int mid = midf(nl, nr);
+    if(l <= mid)update_mul(l, r, nl, mid, m, DXA(p));
+    if(mid < r) update_mul(l, r, mid + 1, nr, m, DXB(p));
+    pushup(p, nl, nr);
+}
+```
+
+练习题：[ZOJ 3998](http://acm.zju.edu.cn/onlinejudge/showProblem.do?problemCode=3998) 需要使用 Euler 降幂公式：$${a^{b^c}} {\rm {MOD}} m = a^{{b^c} {\rm {MOD}}{phi}(m)} {\rm {MOD}} {m}$$
+
+如果出现了三重标记怎么办？[HDU 4578](http://acm.hdu.edu.cn/showproblem.php?pid=4578)
+
+#### 3. 线段树区间求最大
+
+我们将这个问题先简化一下，我们只需要求一个区间的连续和最大。
+
+例题：[SPOJ GSS1](http://www.spoj.com/problems/GSS1/)，我们看一下样例：
+
+```
+3 
+-1 2 3
+1
+1 2
+```
+
+对区间$$[1, 2]$$而言：$$[1, 1]$$的区间和为`-1`，$$[1, 2]$$的区间和为`1`，$$[2, 2]$$的区间和为`2`，样例的答案显然是`2`。
+
+我们需要维护左区间连续和，右区间连续和，区间和，区间和最大值：
+
+```cpp
+typedef struct
+{
+	ll lsum, rsum, sum, maxsum;
+}node;
+```
+
+如何维护结点呢？看看下面的 pushup 函数就明白了：
+
+```cpp
+void pushup(int p, int l, int r)
+{
+	if(l < r)
+	{
+		tree[p].sum = tree[DXA(p)].sum + tree[DXB(p)].sum;
+		tree[p].lsum = max(tree[DXA(p)].lsum, tree[DXA(p)].sum + tree[DXB(p)].lsum);
+		tree[p].rsum = max(tree[DXB(p)].rsum, tree[DXB(p)].sum + tree[DXA(p)].rsum);
+		tree[p].maxsum = max(max(tree[DXA(p)].maxsum, tree[DXB(p)].maxsum), 
+		                  tree[DXA(p)].rsum + tree[DXB(p)].lsum);
+	}
+}
+```
+
+区间和最大必须需要返回一个`node`型，要不然会出错：
+
+```cpp
+node query(int l, int r, int nl, int nr, int p)
+{
 	if(l <= nl && nr <= r)
 	{
-		tree[p].mul = (tree[p].mul * m) % mod;//注意与 update_mul 的比较
-		tree[p].add = (tree[p].add * m) % mod;
-		tree[p].sum = (tree[p].sum * m) % mod;
+		return tree[p];
+	}
+	int mid = midf(nl, nr);
+	if(mid < l)
+		return query(l, r, mid + 1, nr, DXB(p));
+	if(r <= mid)
+		return query(l, r, nl, mid, DXA(p));
+	node a, b, c;
+	c = query(l, r, mid + 1, nr, DXB(p));
+	b = query(l, r, nl, mid, DXA(p));
+	a.maxsum = max(max(b.maxsum, c.maxsum), b.rsum + c.lsum);
+	a.lsum = max(b.lsum, b.sum + c.lsum);
+	a.rsum = max(c.rsum, c.sum + b.rsum);
+	return a;
+}
+```
+
+[SPOJ GSS1 答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/781d6f0d04cd12a7ae1e6f4cf1534d5232276c04/SPOJ/Gss1.cpp)
+
+例题：[SPOJ GSS3](http://www.spoj.com/problems/GSS3/)，这道题就是需要在 GSS1 的基础上补充一个单点更新函数：
+
+```cpp
+void update(int x, int nl, int nr, ll val, int p)
+{
+	if(nl == nr)
+	{
+		tree[p].sum = tree[p].rsum = tree[p].lsum = tree[p].maxsum = val;
 		return ;
 	}
-	pushdown(p, nl, nr);
 	int mid = midf(nl, nr);
-	if(l <= mid)update_mul(l, r, nl, mid, m, DXA(p));
-	if(mid < r) update_mul(l, r, mid + 1, nr, m, DXB(p));
+	if(x <= mid)update(x, nl, mid, val, DXA(p));
+	else if(mid < x)update(x, mid + 1, nr, val, DXB(p));
 	pushup(p, nl, nr);
 }
 ```
 
-练习题：[ZOJ 3998](http://acm.zju.edu.cn/onlinejudge/showProblem.do?problemCode=3998) 需要使用 Euler 降幂公式：$${a^{b^c}} {mod} {m} = a^{{b^c} {mod} {phi}(m)} {mod} {m}$$
+[SPOJ GSS3 答案](https://github.com/wym6912/ACM-ICPC_wym6912/blob/ecb05a6d5b70d8dbefe388b90fd2534674e3b140/SPOJ/Gss3.cpp)
 
-如果出现了三重标记怎么办？[HDU 4578](http://acm.hdu.edu.cn/showproblem.php?pid=4578)
+练习：[BZOJ 1756\(权限题\)](http://www.lydsy.com/JudgeOnline/problem.php?id=1756)
 
-#### 3. 线段树的一些骨骼清奇题目
+#### 4. 线段树的一些骨骼清奇题目
 
 以为 ZOJ 3998 和 ZOJ 4009 一样...结果一写才发现不太对劲...
-
-
 
