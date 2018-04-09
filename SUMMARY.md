@@ -12,10 +12,8 @@
 * 第 9 天 BST\(I\) Treap
 * 第 10 天 BST\(II\) Splay
 * 第 11 天 BST\(III\) 替罪羊树
-* 第 12 天
-* 第 13 天
+* [第 12 天 莫队算法 Manhattan 最小生成树](di-12-tian-mo-dui-suan-fa.md)
+* 第 13 天 树链剖分
 * 第 14 天
 * 后来的故事
-
-
 
